@@ -91,27 +91,26 @@ function paramifyObjectKeys(obj) {
 }
 
 function renameFiles(arr){
-    if (arr.length <1) {
-        return [];
-    }
     var result =[];
-  var obj = {}
+    if (arr.length <1) {
+        return result;
+    }
+    var obj = {}
     for (var i=0; i<arr.length; i++) {
-
+        var checkFnc = function (file) {
+            return result.indexOf(file)===-1;
+        }
         if (arr.slice(0,i).indexOf(arr[i])===-1) {
             obj[arr[i]] = 1;
-            result.push(arr[i]);
-            
-        } else if (obj[arr[i]]) {
-          var newFile;
-            var helper = function () {
-              newFile = arr[i]+'('+obj[arr[i]]+')';
-              if (result.indexOf(newFile)!==-1) {
-              obj[arr[i]]++;
-              helper();
-              } 
+            if (checkFnc(arr[i])) {
+                result.push(arr[i])
+            }                   
+        } else {
+            var newFile = arr[i]+'('+obj[arr[i]]+')';
+            while (!checkFnc(newFile)){
+                obj[arr[i]]++;
+                newFile = arr[i]+'('+obj[arr[i]]+')';
             }
-            helper();
             result.push(newFile);
         }
     }
